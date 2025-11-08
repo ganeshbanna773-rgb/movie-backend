@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Movie</title>
+  <style>
+    body { font-family: Poppins, sans-serif; background:#0e0e0e; color:#fff; padding:20px; }
+    form { display:grid; gap:10px; max-width:400px; }
+    input, textarea { padding:8px; border-radius:6px; border:none; }
+    button { background:#e50914; color:#fff; border:none; padding:10px; cursor:pointer; border-radius:6px; }
+    button:hover { background:#b1060f; }
+  </style>
+</head>
+<body>
+  <h2>Add Movie</h2>
+  <form id="movieForm">
+    <input name="id" placeholder="ID" required />
+    <input name="title" placeholder="Title" required />
+    <input name="image" placeholder="Image URL" />
+    <input name="year" placeholder="Year" />
+    <input name="genre" placeholder="Genre" />
+    <input name="quality" placeholder="Quality (480p,720p...)" />
+    <textarea name="description" placeholder="Description"></textarea>
+    <input name="link480" placeholder="480p Link" />
+    <input name="link720" placeholder="720p Link" />
+    <input name="link1080" placeholder="1080p Link" />
+    <button type="submit">Save Movie</button>
+  </form>
+
+  <p id="msg"></p>
+
+  <script>
+    const form = document.getElementById('movieForm');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      try {
+        const res = await fetch('/api/movies', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (res.ok) {
+          msg.textContent = '✅ Movie saved!';
+          form.reset();
+        } else {
+          msg.textContent = '❌ ' + json.error;
+        }
+      } catch (err) {
+        msg.textContent = 'Network error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

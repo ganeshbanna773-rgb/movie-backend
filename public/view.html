@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>View Movies</title>
+</head>
+<body style="font-family:Poppins,sans-serif;background:#0e0e0e;color:#fff;padding:20px;">
+  <h2>All Movies</h2>
+  <div id="movieList"></div>
+
+  <script src="common.js"></script>
+  <script>
+    async function showMovies() {
+      const list = document.getElementById('movieList');
+      const movies = await fetchAllMovies();
+      if (movies.length === 0) return list.textContent = "No movies yet";
+
+      list.innerHTML = movies.map(m => `
+        <div style="border:1px solid #333; margin:10px; padding:10px; border-radius:8px;">
+          <h3>${m.title} (${m.year})</h3>
+          <img src="${m.image}" alt="${m.title}" width="150"><br>
+          <b>Genre:</b> ${m.genre} <br>
+          <b>Quality:</b> ${m.quality} <br>
+          <b>Description:</b> ${m.description} <br>
+          <b>Links:</b>
+          <a href="${m.link480}" target="_blank">480p</a> |
+          <a href="${m.link720}" target="_blank">720p</a> |
+          <a href="${m.link1080}" target="_blank">1080p</a>
+        </div>
+      `).join('');
+    }
+    showMovies();
+  </script>
+</body>
+</html>
